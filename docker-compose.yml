@@ -28,7 +28,7 @@ services:
     image: mysql:8
     container_name: mysql
     ports:
-      - "3006:3006" # MySQL-portti
+      - "3307:3306" # MySQL-portti
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: mydatabase

@@ -85,3 +85,11 @@ Testaa tietokantayhteys:
           }
         });
     );
+
+Käynnistä bash-sessio MySQL-säiliöön
+    -docker exec -it mysql /bin/bash
+    -mysql -u root -p
+
+SQL -komentoja:
+    -CREATE DATABASE databasename;
+    -SHOW DATABASES;
