@@ -11,6 +11,77 @@ Rakennetaan Docker-kuva:
 Käynnistetään säiliö:
     -docker-compose up
 
-Error: Can't resolve 'web-vitals'
-    -Avaa projektisi app/package.json ja tarkista, että web-vitals on dependencies-osiossa.
-    -Jos web-vitals puutuu, lisää se: npm install web-vitals
+Lisätään MySQL-palvelu Docker Compose -tiedostoon:
+    database:
+        image: mysql:8
+        container_name: mysql
+        ports:
+          - "3306:3306" # MySQL-portti
+        environment:
+          MYSQL_ROOT_PASSWORD: rootpassword
+          MYSQL_DATABASE: mydatabase
+          MYSQL_USER: myuser
+          MYSQL_PASSWORD: mypassword
+        volumes:
+          - db_data:/var/lib/mysql
+
+    volumes:
+      db_data:
+
+Lisätään Node.js -palvelin
+    -Luodaan server -kansio React-projektin rinnalle
+    -cd server
+    -npm init -y
+    -npm install express mysql2 dotenv
+
+Luo palvelin server/index.js
+
+Luo .env-tiedosto server-kansioon
+
+Lisätään Node.js-palvelin Docker Composeen:
+    -Päivitetään docker-compose.yml:
+    services:
+        react-app:
+          ...
+
+        server:
+          build:
+            context: ./server
+          ports:
+            - "5000:5000"
+          volumes:
+            - ./server:/server
+          environment:
+            - DB_HOST=database
+            - DB_USER=myuser
+            - DB_PASSWORD=mypassword
+            - DB_NAME=mydatabase
+
+        database:
+          ...
+
+Luodan Dockerfile Node.js palvelimelle (server/Dockerfile):
+    FROM node:18
+    WORKDIR /server
+    COPY package*.json ./
+    RUN npm install
+    COPY . .
+    EXPOSE 5000
+    CMD ["node", "index.js"]
+
+Käynnistetään kaikki palvelut:
+    -docker-compose up --build
+    -avaa selain osoitteessa localhost:5005
+    -saat vastauksen "Node.js-palvelin toimii!
+
+Testaa tietokantayhteys: 
+    -lisää server/index.js-tiedostoon seuraava endpoint:
+    app.get('/users', (req, res) => {
+        db.query('SELECT * FROM users', (err, results) => {
+          if (err) {
+            res.status(500).send(err);
+          } else {
+            res.json(results);
+          }
+        });
+    );
