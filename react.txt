@@ -1,0 +1,16 @@
+Luodaan projektille kansio:
+    -mkdir kotisivukone-react
+    -cd kotisivukone-react
+
+Alustetaan React-sovellus:
+    -npx create-react-app app
+
+Rakennetaan Docker-kuva:
+    -docker-compose build
+
+Käynnistetään säiliö:
+    -docker-compose up
+
+Error: Can't resolve 'web-vitals'
+    -Avaa projektisi app/package.json ja tarkista, että web-vitals on dependencies-osiossa.
+    -Jos web-vitals puutuu, lisää se: npm install web-vitals
