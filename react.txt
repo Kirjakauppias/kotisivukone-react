@@ -93,3 +93,5 @@ Käynnistä bash-sessio MySQL-säiliöön
 SQL -komentoja:
     -CREATE DATABASE databasename;
     -SHOW DATABASES;
+    -USE webpages;
+    -CREATE TABLE 'user';
